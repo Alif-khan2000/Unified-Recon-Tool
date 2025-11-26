@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URT Recon Report - {{ target }}</title>
+</head>
+<body>
+    <h1>Recon Report for {{ target }}</h1>
+    <pre>{{ results|tojson(indent=2) }}</pre>
+</body>
+</html>
