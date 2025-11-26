@@ -23,5 +23,16 @@ def main(
         results["tls"] = tls.tls_probe(target)
         save_json_report(results, target, output)
         typer.echo(f"[URT] Passive recon complete. Report saved to {output or f'reports/{target}/recon.json'}")
+    elif mode == "active":
+        from urt.active import nmap_wrapper, gobuster, nikto, whatweb
+        results["nmap"] = nmap_wrapper.nmap_scan(target)
+        results["gobuster"] = gobuster.gobuster_scan(target)
+        results["nikto"] = nikto.nikto_scan(target)
+        results["whatweb"] = whatweb.whatweb_scan(target)
+        save_json_report(results, target, output)
+        if all(str(r.get('status', ''))[:7] == 'skipped' for r in results.values()):
+            typer.echo("[URT] All active modules skipped (binaries missing or not implemented).")
+        else:
+            typer.echo(f"[URT] Active recon complete. Report saved to {output or f'reports/{target}/recon.json'}")
     else:
         typer.echo(f"[URT] Mode '{mode}' not implemented yet.")
