@@ -13,8 +13,4 @@ def main(
     parallel: bool = typer.Option(False, "--parallel", help="Run modules in parallel")
 ):
     """Unified Recon Tool CLI entrypoint (skeleton)."""
-    typer.echo(f"[URT] {target=} {mode=} {profile=} {output=} {confirm=} {parallel=}")
-    # To be implemented: call orchestration logic
-
-if __name__ == "__main__":
-    app()
+    typer.echo(f"[URT] target={target} mode={mode} profile={profile} output={output} confirm={confirm} parallel={parallel}")

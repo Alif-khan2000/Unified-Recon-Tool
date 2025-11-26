@@ -1,4 +1,4 @@
-from urt.cli import main
+from urt.cli import app
 
 if __name__ == "__main__":
-    main()
+    app()
