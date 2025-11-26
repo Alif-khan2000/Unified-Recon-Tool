@@ -1,6 +1,7 @@
 import typer
 from typing import Optional
 from urt.reporting.json_report import save_json_report
+from urt.reporting.html_report import save_html_report
 
 app = typer.Typer()
 
@@ -22,7 +23,8 @@ def main(
         results["http"] = http.http_probe(target)
         results["tls"] = tls.tls_probe(target)
         save_json_report(results, target, output)
-        typer.echo(f"[URT] Passive recon complete. Report saved to {output or f'reports/{target}/recon.json'}")
+        html_path = save_html_report(results, target)
+        typer.echo(f"[URT] Passive recon complete. Reports saved to {output or f'reports/{target}/recon.json'} and {html_path}")
     elif mode == "active":
         from urt.active import nmap_wrapper, gobuster, nikto, whatweb
         results["nmap"] = nmap_wrapper.nmap_scan(target)
@@ -30,9 +32,10 @@ def main(
         results["nikto"] = nikto.nikto_scan(target)
         results["whatweb"] = whatweb.whatweb_scan(target)
         save_json_report(results, target, output)
+        html_path = save_html_report(results, target)
         if all(str(r.get('status', ''))[:7] == 'skipped' for r in results.values()):
-            typer.echo("[URT] All active modules skipped (binaries missing or not implemented).")
+            typer.echo(f"[URT] All active modules skipped (binaries missing or not implemented). Reports saved to {output or f'reports/{target}/recon.json'} and {html_path}")
         else:
-            typer.echo(f"[URT] Active recon complete. Report saved to {output or f'reports/{target}/recon.json'}")
+            typer.echo(f"[URT] Active recon complete. Reports saved to {output or f'reports/{target}/recon.json'} and {html_path}")
     else:
         typer.echo(f"[URT] Mode '{mode}' not implemented yet.")
